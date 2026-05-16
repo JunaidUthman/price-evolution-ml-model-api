@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-dotenv
+xgboost
+scikit-learn
+joblib
+huggingface_hub
+pandas
+numpy
+pydantic-settings
