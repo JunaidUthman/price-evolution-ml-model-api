@@ -1,7 +1,7 @@
 # Product Price Evolution API
 
 ## Overview
-The Product Price Evolution API is a FastAPI-based machine learning service designed to predict future price trends for products. By analyzing a product's current price, its historical price lags, and its recent volatility, the API uses a pre-trained XGBoost classification model to forecast whether the price is likely to decrease (`BAISSE`), remain stable (`STABLE`), or increase (`HAUSSE`) over the next 7 days.
+The Product Price Evolution api is a FastAPI-based machine learning service designed to predict future price trends for products. By analyzing a product's current price, its historical price lags, and its recent volatility, the API uses a pre-trained XGBoost classification model to forecast whether the price is likely to decrease (`BAISSE`), remain stable (`STABLE`), or increase (`HAUSSE`) over the next 7 days.
 
 The service automatically downloads the latest trained model from the Hugging Face Hub on startup, ensuring that it is always serving predictions using the most up-to-date intelligence.
 
