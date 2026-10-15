@@ -10,6 +10,7 @@ on:
       - 'tests/**'
       - 'requirements.txt'
       - 'Dockerfile'
+      - '.github/workflows/**'
 
 jobs:
   test-and-build:
@@ -67,22 +68,19 @@ jobs:
           token: ${{ secrets.INFRA_PAT }}
           path: infra-repo
 
-      - name: Set up Kustomize
-        uses: imranismail/setup-kustomize@v3
-
-      - name: Update image tag in Kubernetes Infrastructure repository
+      - name: Update image tag in price-api manifest
         env:
-          IMAGE_TAG: v-${{ steps.vars.outputs.sha_short }}
+          NEW_IMAGE: junaiduthman/product-price-api:v-${{ steps.vars.outputs.sha_short }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          cd infra-repo/base
+          cd infra-repo
 
-          # Use kustomize to set the new image tag
-          kustomize edit set image junaiduthman/product-price-api=junaiduthman/product-price-api:${IMAGE_TAG}
+          # Update image using yq directly on the Deployment document (ignoring Service)
+          yq -i '(select(.kind == "Deployment").spec.template.spec.containers[0].image) = env(NEW_IMAGE)' base/price-api/price-api.yaml
 
-          # Commit and push changes
-          git add kustomization.yaml
-          git diff --staged --quiet || (git commit -m "chore(gitops): update product-price-api image to ${IMAGE_TAG}" && git push)
+          # Commit and push ONLY price-api.yaml
+          git add base/price-api/price-api.yaml
+          git diff --staged --quiet || (git commit -m "chore(gitops): update price-api image to ${NEW_IMAGE}" && git push)
 
